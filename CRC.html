@@ -1,0 +1,98 @@
+<html lang="" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>CN PRACS</title>
+</head>
+
+<body>
+
+    <pre>
+        #include _lessthan stdio.h>
+        #include _lessthan string.h>
+        #include _lessthan stdbool.h>
+        #define N strlen(g)
+
+        char t[28],cs[28],g[28];//t = data word , cs = code segment , g = generator polynomial(divisor in bits)
+        int a,e,c;
+
+        void xorfunction(){
+            for(c = 1;c < N; c++)
+            cs[c] = ((cs[c] == g[c])?'0':'1');
+        }
+
+        void crc(){
+            for(e=0;e _lessthan N;e++)
+                cs[e]=t[e];
+            do{
+                if(cs[0]=='1')
+                    xorfunction();
+                for(c=0;c _lessthan N-1;c++)
+                    cs[c]=cs[c+1]; // shifting back 1 position
+                cs[c]=t[e++];
+            }while(e<=a+N-1);
+        }
+
+        int main()
+        {
+            printf("\nEnter data bits : ");
+            scanf("%s",t);
+
+            printf("\n----------------------------------------");
+
+            printf("\nEnter generator bits : ");
+            scanf("%s",g);
+
+            printf("\n----------------------------------------");
+
+            a=strlen(t);
+
+            for(e=a;e _lessthan a+N-1;e++)
+                t[e]='0';
+            printf("\nPaded data is : %s",t);
+
+            printf("\n----------------------------------------");
+
+            crc();
+            printf("\nCRC is : %s",cs);
+
+            for(e=a;e _lessthan a+N-1;e++)
+                t[e]=cs[e-a];
+            printf("\n----------------------------------------");
+
+            printf("\nFinal data to be sent : %s",t);
+            printf("\n----------------------------------------");
+            printf("\nTest error detection 0(yes) 1(no)? : ");
+            scanf("%d",&e);
+            if(e==0)
+            {
+                printf("Enter the encoded data : ");
+                scanf("%s", t);
+                crc();
+                printf("Remainder Received : %s", cs);
+                bool ans = true;
+                for (int i = 0; i < strlen(cs); i++) {
+                    if (cs[i] == '1'){
+                        ans = false;
+                        break;
+                    }
+                }
+                if (ans) {
+                    printf("\nNo Error Detected");
+                    return 0;
+                }
+                else{
+                    printf("\nError Detected");
+                    return 0;
+                }
+            }
+            else {
+                printf("Program Completed Successfully");
+                return 0;
+            }
+            return 0;
+        }
+    </pre>
+
+</body>
+</html>

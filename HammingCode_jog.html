@@ -1,0 +1,207 @@
+<html lang="" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>CN PRACS</title>
+</head>
+
+<body>
+
+    <pre>
+        package com.jog.cnlab.HammingCode;
+
+        import java.util.*;
+
+        public class HammingCode {
+
+        	public static void main(String[] args) {
+        		Scanner sc = new Scanner(System.in);
+        		System.out.print("Enter the number of bits: ");
+        		int digits = sc.nextInt();
+        		sc.nextLine();
+        		System.out.print("Enter the frame: ");
+        		String frame = sc.nextLine();
+
+        		if (frame.length() == digits) {
+        			int parity_bits = parity_bits_number(digits);
+        			int code_digits = digits + parity_bits;
+        			System.out.println("Number of digits in code = " + code_digits);
+
+        			char[] blank_code = parity_positions(frame, code_digits, parity_bits);
+        			System.out.print("Parity bit positions are: ");
+        			for (char c : blank_code) {
+        				System.out.print(c);
+        			}
+        			System.out.println('\n');
+
+        			char[] hamming_code = code_generate(blank_code, code_digits, parity_bits);
+
+        			System.out.println("------------------- Receiver's End --------------------");
+        			System.out.print("Enter code received of " + code_digits + " digits: ");
+        			String received_code = sc.nextLine();
+        			System.out.println();
+
+        			if (received_code.length() == code_digits) {
+        				char[] r = r_value(received_code, code_digits, parity_bits);
+        				System.out.print("r value is: ");
+        				for (char c : r) {
+        					System.out.print(c);
+        				}
+        				System.out.println();
+
+        				char[] corrected_code = error_correct(received_code, r, parity_bits);
+        				System.out.print("\nCorrected Code: ");
+        				for (char c : corrected_code) {
+        					System.out.print(c);
+        				}
+        			} else {
+        				System.out.println("Length does not match");
+        			}
+        		} else {
+        			System.out.println("Wrong number of digits. Try again");
+        		}
+        	}
+
+        	private static int parity_bits_number(int digits) {
+        		int LHS;
+        		int parity_bits = 0;
+
+        		for (int power = 0; power <= digits; power++) {
+        			LHS = (int) Math.pow(2, power);
+        			if (LHS >= (digits + power + 1)) {
+        				parity_bits = power;
+        				break;
+        			}
+        		}
+
+        		return parity_bits;
+        	}
+
+        	private static char[] parity_positions(String frame, int code_digits, int parity_bits) {
+        		int frame_count = 0;
+        		char[] code = new char[code_digits];
+
+        		for (int i = 0; i _lessthan parity_bits; i++) {
+        			code[(int) Math.pow(2, i) - 1] = '_';
+        		}
+
+        		for (int j = 0; j _lessthan code_digits; j++) {
+        			if (code[j] != '_') {
+        				code[j] = frame.charAt(frame_count);
+        				frame_count++;
+        			}
+        		}
+
+        		return code;
+        	}
+
+        	private static char[] code_generate(char[] hamming_code, int code_digits, int parity_bits) {
+        		int par_count = 0;
+        		for (int i = 0; i _lessthan parity_bits; i++) {
+        			int x = (int) Math.pow(2, i) - 1;
+        			while (x _lessthan code_digits) {
+        				for (int y = 0; y < (int) Math.pow(2, i); y++) {
+        					if ((x + y) _lessthan code_digits) {
+        						if (hamming_code[x + y] == '1') {
+        							par_count++;
+        						}
+        					}
+        				}
+        				x += 2 * (int) Math.pow(2, i);
+        			}
+
+        			System.out.print("Parity count at position " + ((int) Math.pow(2, i)) + ": ");
+        			System.out.println(par_count);
+
+        			if (par_count % 2 == 0) {
+        				hamming_code[(int) Math.pow(2, i) - 1] = '0';
+        			} else {
+        				hamming_code[(int) Math.pow(2, i) - 1] = '1';
+        			}
+        			par_count = 0;
+
+        			System.out.print("Parity at position " + ((int) Math.pow(2, i) - 1) + ": ");
+        			for (char c : hamming_code) {
+        				System.out.print(c);
+        			}
+        			System.out.println('\n');
+        		}
+        		return hamming_code;
+        	}
+
+        	public static char[] r_value(String received_code, int code_digits, int parity_bits) {
+        		char[] r = new char[parity_bits];
+        		int count = parity_bits - 1;
+        		int par_count = 0;
+        		char[] error_code = new char[code_digits];
+
+        		for (int i = 0; i _lessthan code_digits; i++) {
+        			error_code[i] = received_code.charAt(i);
+        		}
+
+        		for (int j = 0; j _lessthan parity_bits; j++) {
+        			int x = (int) Math.pow(2, j) - 1;
+        			while (x _lessthan code_digits) {
+        				for (int y = 0; y < (int) Math.pow(2, j); y++) {
+        					if ((x + y) _lessthan code_digits) {
+        						if (error_code[x + y] == '1') {
+        							par_count++;
+        						}
+        					}
+        				}
+        				x = x + 2 * (int) Math.pow(2, j);
+        			}
+
+        			System.out.print("Parity at position " + (int) Math.pow(2, j) + ": ");
+        			System.out.println(par_count);
+
+        			if (par_count % 2 == 0) {
+        				r[count] = '0';
+        			} else {
+        				r[count] = '1';
+        			}
+        			System.out.println("r" + j + " = " + r[count]);
+        			par_count = 0;
+        			count--;
+        			System.out.println();
+        		}
+
+        		return r;
+        	}
+
+        	private static char[] error_correct(String received_code, char[] r, int parity_bits) {
+        		char[] error_code = new char[received_code.length()];
+
+        		for (int i = 0; i _lessthan received_code.length(); i++) {
+        			error_code[i] = received_code.charAt(i);
+        		}
+
+        		int decimal = 0;
+        		int index = parity_bits - 1;
+
+        		for (int i = index; i >= 0; i--) {
+        			if (r[i] == '1') {
+        				decimal += (int) Math.pow(2, index - i);
+        			}
+        		}
+
+        		System.out.println("The decimal value of r is " + decimal);
+
+        		if (decimal == 0) {
+        			System.out.println("No Error");
+        		} else {
+        			if (error_code[decimal - 1] == '1') {
+        				error_code[decimal - 1] = '0';
+        			} else {
+        				error_code[decimal - 1] = '1';
+        			}
+        		}
+
+        		return error_code;
+
+        	}
+        }
+    </pre>
+
+</body>
+</html>

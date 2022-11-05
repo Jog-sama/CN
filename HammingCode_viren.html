@@ -1,0 +1,153 @@
+<html lang="" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>CN PRACS</title>
+</head>
+
+<body>
+
+    <pre>
+        import java.util.*;
+        public class ex_ham {
+            public static void main(String[] args){
+                Scanner in = new Scanner(System.in);
+                System.out.println("Enter the number of data bits");
+                int m = in.nextInt();
+                int p =0;
+                for(int i = 1 ; i _lessthan m ; i++){
+                    int check = (int)(Math.pow(2,i));
+                    if( check >= i+m+1){
+                        p = i;
+                        break;
+                    }
+                }
+                System.out.println(p);
+
+                int size = p+m+1;
+                int arr[] = new int[size];
+
+                System.out.println("Enter the data bit array");
+                int k=0;
+                for(int i = 1; i _lessthan size ; i++){
+                    if((int)Math.pow(2,k) == i){
+                        arr[i]=-1;
+                        k++;
+                    }
+                    else{
+                        arr[i] = in.nextInt();
+
+                    }
+                }
+                    System.out.println();
+                  for(int i = size-1; i >=1  ; i--){
+                    System.out.print(arr[i]+" ");
+                  }
+                  System.out.println();
+                // int k;
+                // //make array with values 1 0 0 -1 1 1 0 -1 1 -1 -1 in reverse order
+                // int[] arr = {99,-1,-1,1,-1,0,1,1,-1,0,0,1};
+
+
+
+                // int size = arr.length;
+
+                  for(int i = size-1; i >=1  ; i--){
+                    System.out.print(arr[i]+" ");
+                  }
+                  System.out.println();
+                  k=0;
+                  int start=0, end = 0 ;
+                  for(int i =1 ; i _lessthan size ; i++){
+                        if(arr[i]==-1){
+                            start = (int)Math.pow(2, k);
+                            int count = 0;
+                            for(int j = i ; j _lessthan size ; j+=start*2){
+                                for (int l = 0 ; l _lessthan start ; l++){
+                                    // System.out.println("j "+j+" start "+start);
+                                    if(j+l _lessthan size && arr[j+l]!= -1){
+                                        count+=arr[j+l];
+                                        // System.out.println(arr[j+l]);
+                                    }
+                                }
+                            }
+
+                            System.out.println();
+                            System.out.println("count at i "+i+" is "+count);
+                            if(count%2 !=0){
+                                arr[i] = 1;
+                            }
+                            else{
+                                arr[i]=0;
+                            }
+                            k++;
+                            count=0;
+                        }
+                  }
+
+                  System.out.println();
+                  for(int i = size-1; i >=1  ; i--){
+                    System.out.print(arr[i]+" ");
+                  }
+                  //recieved 1 0 0 1 0 1 0 0 1 0 1
+                  int rec[] = {99,1,0,1,0,0,1,0,1,0,0,1};
+
+                  start=0; end = 0 ;
+                  int b=0;
+                  k=0;
+                  int error[] = new int[p];
+                  System.out.println("====================================");
+
+                  for(int i =1 ; i _lessthan size ; i++){
+                        if((int)Math.pow(2, k) ==i){
+                            start = (int)Math.pow(2, k);
+                            int count = 0;
+                            for(int j = i ; j _lessthan size ; j+=start*2){
+                                for (int l = 0 ; l _lessthan start ; l++){
+                                    // System.out.println("j "+j+" start "+start);
+                                    if(j+l _lessthan size ){
+                                        count+=rec[j+l];
+                                        // System.out.println(rec[j+l]);
+                                    }
+                                }
+                            }
+
+                            System.out.println();
+                            System.out.println("count at i "+i+" is "+count);
+                            if(count%2 ==0){
+                                error[b]=0;b++;
+                            }
+                            else{
+                                error[b]=1;b++;
+                            }
+                            k++;
+                            count=0;
+                        }
+
+                  }
+                  //print error array
+                    System.out.println();
+                    String st="";
+                    for(int i = p-1; i >=0  ; i--){
+                        System.out.print(error[i]+" ");
+                        st+=error[i];
+                    }
+                    System.out.println();
+                    System.out.println(Integer.valueOf(st , 2));
+
+                    //flip bit 7 and display
+                    for(int i =size-1; i >=1  ; i--){
+                        if(i==Integer.valueOf(st , 2)){
+                           String sdad= rec[i]==1? "0":"1";
+                           System.out.print(sdad+" ");
+                        }
+                        else{
+                            System.out.print(rec[i]+" ");
+                        }
+                    }
+            }
+        }
+    </pre>
+
+</body>
+</html>

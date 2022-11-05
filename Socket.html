@@ -1,0 +1,55 @@
+<html lang="" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>CN PRACS</title>
+</head>
+
+<body>
+
+    <pre>
+        import java.net.*;
+        import java.io.*;
+        public class clientside {
+            public static void main(String[] args) {
+                try{
+                    Socket s = new Socket("localhost", 6666);
+                    DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+
+                    dout.writeInt(10);
+                    dout.flush();
+                    dout.close();
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                }
+
+
+            }
+        }
+
+
+
+
+        import java.io.*;
+        import java.net.*;
+        public class serverside {
+            public static void main(String[] args) {
+                try{
+                ServerSocket ss = new ServerSocket(6666);
+                Socket s = ss.accept();
+                DataInputStream dis = new DataInputStream(s.getInputStream());
+
+                // String st = (String)dis.readUTF();
+                int st = dis.readInt();
+                System.out.println(st);
+                }
+                catch(Exception e){
+                    System.out.println("error");
+                }
+            }
+        }
+    </pre>
+
+</body>
+</html>

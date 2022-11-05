@@ -1,0 +1,71 @@
+<html lang="" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>CN PRACS</title>
+</head>
+
+<body>
+
+    <pre>
+        public class try_crc {
+
+            public static void main(String args[]){
+                String message = "100100";
+                String cpm = message;
+                String gp = "1101";
+
+                for(int i =0;i _lessthan gp.length()-1;i++){
+                    message+="0";
+                }
+                try_crc obj = new try_crc();
+                String st = obj.calci(message, gp);
+                for(int i = st.length() ; i _lessthan gp.length()-1;i++){
+                    st="0"+st;
+
+                }
+                System.out.println("the ANS IS "+st);
+
+
+                String msgn = cpm+st;
+                System.out.println(obj.calci("100000001", gp));
+
+
+            }
+            public String calci(String message , String gp){
+                String message_sub = message.substring(0,gp.length());
+                System.out.println(message_sub);
+                int lenc= 4;
+                System.out.println("OG message is "+message);
+                int msb = Integer.parseInt(message_sub,2);
+                message = message.substring(lenc);
+                System.out.println("OG message is "+message);
+                int mgp = Integer.parseInt(gp,2);
+                System.out.println(msb+"  "+mgp);
+                String n_message_sub="";
+                while(true){
+                    int xans = msb^mgp;
+                    System.out.println("XOR ans is "+Integer.toString(xans,2));
+                    n_message_sub = Integer.toString(xans,2);
+                    int dif = gp.length()-n_message_sub.length();
+                    if(n_message_sub.length() _lessthan gp.length() && message.length()>dif-1){
+                        n_message_sub+=message.substring(0,(gp.length()-n_message_sub.length()));
+                        System.out.println("the string is "+n_message_sub);
+                        message = message.substring(dif);
+                        System.out.println("new message is "+message);
+                    }
+                    else{
+                        System.out.println(n_message_sub);
+                        break;
+                    }
+                    msb = Integer.parseInt(n_message_sub,2);
+
+                }
+
+                return n_message_sub;
+            }
+        }
+    </pre>
+
+</body>
+</html>
